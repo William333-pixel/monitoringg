@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Data Customer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f8fc;
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 15px 20px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #4e54c8;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .empty {
+      text-align: center;
+      margin-top: 20px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Data Customer yang Sudah Membayar</h2>
+  <div id="customerContainer"></div>
+
+  <script>
+    const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+    const container = document.getElementById('customerContainer');
+
+    if (bookings.length === 0) {
+      container.innerHTML = '<p class="empty">Belum ada data customer yang membayar.</p>';
+    } else {
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Tipe Kamar</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Malam</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${bookings.map(booking => `
+            <tr>
+              <td>${booking.nama}</td>
+              <td>${booking.tipeKamar}</td>
+              <td>${booking.checkin}</td>
+              <td>${booking.checkout}</td>
+              <td>${booking.jumlahMalam}</td>
+              <td>Rp ${booking.totalHarga.toLocaleString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+      container.appendChild(table);
+    }
+  </script>
+
+</body>
+</html>

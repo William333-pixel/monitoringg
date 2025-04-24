@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Data Kamar</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8fafc;
+      padding: 40px;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e293b;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 20px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f1f5f9;
+    }
+
+    .summary {
+      margin-top: 20px;
+      font-size: 16px;
+      text-align: center;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Data Kamar Tersedia</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Tipe Kamar</th>
+        <th>Total Kamar</th>
+        <th>Terisi</th>
+        <th>Tersisa</th>
+      </tr>
+    </thead>
+    <tbody id="kamarTable"></tbody>
+  </table>
+  <p class="summary" id="summaryText"></p>
+
+  <script>
+    const totalKamar = {
+      Deluxe: 10,
+      Superior: 15,
+      Standard: 20
+    };
+
+    const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+    const sudahBayar = bookings.filter(b => b.statusPembayaran === true);
+
+    const terisi = {
+      Deluxe: 0,
+      Superior: 0,
+      Standard: 0
+    };
+
+    sudahBayar.forEach(b => {
+      if (terisi[b.tipeKamar] !== undefined) {
+        terisi[b.tipeKamar]++;
+      }
+    });
+
+    const tbody = document.getElementById('kamarTable');
+
+    Object.keys(totalKamar).forEach(tipe => {
+      const sisa = totalKamar[tipe] - terisi[tipe];
+      const row = `
+        <tr>
+          <td>${tipe}</td>
+          <td>${totalKamar[tipe]}</td>
+          <td>${terisi[tipe]}</td>
+          <td>${sisa}</td>
+        </tr>
+      `;
+      tbody.innerHTML += row;
+    });
+
+    const totalTersisa = Object.keys(totalKamar).reduce((sum, tipe) => sum + (totalKamar[tipe] - terisi[tipe]), 0);
+    document.getElementById('summaryText').textContent = `Total kamar yang tersedia saat ini: ${totalTersisa} kamar`;
+  </script>
+
+</body>
+</html>

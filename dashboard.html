@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Pemesanan Hotel</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7f9;
+      color: #333;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 220px;
+      height: 100%;
+      background-color: #1e293b;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+    }
+    .sidebar h2 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .sidebar a {
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 12px 20px;
+      display: block;
+      transition: background 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #334155;
+      color: #fff;
+    }
+    .main {
+      margin-left: 220px;
+      padding: 30px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      text-align: center;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card i {
+      font-size: 30px;
+      margin-bottom: 10px;
+      color: #1e40af;
+    }
+    .card a {
+      color: #1e40af;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    @media(max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .main {
+        margin-left: 0;
+      }
+    }
+
+    .logout-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: background 0.3s ease, transform 0.3s ease;
+      z-index: 999;
+    }
+
+    .logout-btn:hover {
+      background: linear-gradient(135deg, #2563eb, #1e3a8a);
+      transform: scale(1.05);
+    }
+
+    .logout-btn i {
+      margin-right: 8px;
+    }
+
+    /* Modal Logout */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .modal {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .modal h2 {
+      margin-bottom: 20px;
+    }
+
+    .modal button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-ya {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-ya:hover {
+      background: #dc2626;
+    }
+
+    .btn-tidak {
+      background: #d1d5db;
+    }
+
+    .btn-tidak:hover {
+      background: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="pemesanan-kamar.html"><i class="fas fa-calendar-check"></i> Pemesanan Kamar</a>
+    <a href="data-customer.html"><i class="fas fa-users"></i> Data Customer</a>
+    <a href="data-kamar.html"><i class="fas fa-door-open"></i> Data Kamar</a>
+    <a href="transaksi-booking.html"><i class="fas fa-bookmark"></i> Transaksi / Booking</a>
+    <a href="laporan.html"><i class="fas fa-chart-line"></i> Laporan Pemesanan</a>
+    <a href="checkout.html"><i class="fas fa-sign-out-alt"></i> Checkout</a>
+    <a href="ganti-password.html"><i class="fas fa-key"></i> Ganti Password</a>
+  </div>
+
+  <div class="main">
+    <h1>Dashboard Sistem Pemesanan Hotel</h1>
+    <div class="cards">
+      <div class="card">
+        <i class="fas fa-calendar-check"></i>
+        <h3>Pemesanan Kamar</h3>
+        <a href="pemesanan-kamar.html">Lihat Detail</a>
+      </div>
+      <div class="card">
+        <i class="fas fa-door-open"></i>
+        <h3>Data Kamar</h3>
+        <a href="data-kamar.html">Lihat Detail</a>
+      </div>
+      <div class="card">
+        <i class="fas fa-users"></i>
+        <h3>Data Customer</h3>
+        <a href="data-customer.html">Lihat Detail</a>
+      </div>
+      <div class="card">
+        <i class="fas fa-bookmark"></i>
+        <h3>Transaksi / Booking</h3>
+        <a href="transaksi-booking.html">Lihat Detail</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tombol Logout -->
+  <a href="#" class="logout-btn" onclick="showModal()">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
+
+  <!-- Modal Logout -->
+  <div class="modal-overlay" id="modalLogout">
+    <div class="modal">
+      <h2>Yakin ingin logout?</h2>
+      <button class="btn-ya" onclick="logout()">Ya</button>
+      <button class="btn-tidak" onclick="closeModal()">Tidak</button>
+    </div>
+  </div>
+
+  <script>
+    function showModal() {
+      document.getElementById("modalLogout").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modalLogout").style.display = "none";
+    }
+
+    function logout() {
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

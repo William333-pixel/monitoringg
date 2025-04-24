@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan Pemesanan Hotel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e293b;
+      margin-bottom: 30px;
+    }
+
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      margin-bottom: 30px;
+      color: #475569;
+    }
+
+    .summary div {
+      padding: 10px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 23%;
+      text-align: center;
+    }
+
+    .summary div span {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f1f5f9;
+    }
+
+    .empty {
+      text-align: center;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Laporan Pemesanan Kamar Hotel</h2>
+
+  <div class="summary">
+    <div>
+      <span id="totalPemesanan">0</span>
+      <p>Total Pemesanan</p>
+    </div>
+    <div>
+      <span id="totalPendapatan">Rp 0</span>
+      <p>Total Pendapatan</p>
+    </div>
+    <div>
+      <span id="kamarTerisi">0</span>
+      <p>Total Kamar Terisi</p>
+    </div>
+    <div>
+      <span id="kamarTersedia">0</span>
+      <p>Total Kamar Tersedia</p>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tipe Kamar</th>
+        <th>Jumlah Pemesanan</th>
+        <th>Total Pendapatan</th>
+      </tr>
+    </thead>
+    <tbody id="laporanTable"></tbody>
+  </table>
+
+  <p class="empty" id="noDataMessage"></p>
+
+  <script>
+    const hargaKamar = {
+      Deluxe: 1000000,
+      Superior: 750000,
+      Standard: 500000
+    };
+
+    const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+    const transactions = bookings.filter(b => b.statusPembayaran === true); // Hanya yang sudah bayar
+
+    let totalPemesan = 0;
+    let totalPendapatan = 0;
+    let kamarTerisi = {
+      Deluxe: 0,
+      Superior: 0,
+      Standard: 0
+    };
+
+    transactions.forEach(b => {
+      totalPemesan++;
+      totalPendapatan += b.totalHarga; // Pendapatan hanya dihitung jika sudah bayar
+      kamarTerisi[b.tipeKamar]++;
+    });
+
+    const totalKamar = {
+      Deluxe: 10,
+      Superior: 15,
+      Standard: 20
+    };
+
+    const kamarTersedia = {
+      Deluxe: totalKamar.Deluxe - kamarTerisi.Deluxe,
+      Superior: totalKamar.Superior - kamarTerisi.Superior,
+      Standard: totalKamar.Standard - kamarTerisi.Standard
+    };
+
+    document.getElementById('totalPemesanan').textContent = totalPemesan;
+    document.getElementById('totalPendapatan').textContent = `Rp ${totalPendapatan.toLocaleString()}`;
+    document.getElementById('kamarTerisi').textContent = totalPemesan;
+    document.getElementById('kamarTersedia').textContent = Object.values(kamarTersedia).reduce((sum, val) => sum + val, 0);
+
+    const laporanTable = document.getElementById('laporanTable');
+    Object.keys(kamarTerisi).forEach(tipe => {
+      const row = `
+        <tr>
+          <td>${tipe}</td>
+          <td>${kamarTerisi[tipe]}</td>
+          <td>Rp ${(kamarTerisi[tipe] * hargaKamar[tipe]).toLocaleString()}</td>
+        </tr>
+      `;
+      laporanTable.innerHTML += row;
+    });
+
+    if (transactions.length === 0) {
+      document.getElementById('noDataMessage').textContent = "Tidak ada data pemesanan yang berhasil.";
+    }
+  </script>
+
+</body>
+</html>

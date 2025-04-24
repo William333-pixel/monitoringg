@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Pemesanan Kamar</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #74ebd5, #9face6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+      transition: all 0.3s ease-in-out;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+    label {
+      margin-top: 15px;
+      display: block;
+      color: #555;
+    }
+    input, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: #4e54c8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #3b40a4;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Pemesanan Kamar</h2>
+  <form id="bookingForm">
+    <label>Nama Lengkap</label>
+    <input type="text" id="nama" required>
+
+    <label>Tipe Kamar</label>
+    <select id="tipeKamar" required>
+      <option value="">-- Pilih Tipe Kamar --</option>
+      <option value="Deluxe">Deluxe - Rp 1.000.000</option>
+      <option value="Superior">Superior - Rp 750.000</option>
+      <option value="Standard">Standard - Rp 500.000</option>
+    </select>
+
+    <label>Check-in</label>
+    <input type="date" id="checkin" required>
+
+    <label>Check-out</label>
+    <input type="date" id="checkout" required>
+
+    <button type="submit">Pesan Sekarang</button>
+  </form>
+</div>
+
+<script>
+  const hargaKamar = {
+    Deluxe: 1000000,
+    Superior: 750000,
+    Standard: 500000
+  };
+
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const nama = document.getElementById('nama').value;
+    const tipeKamar = document.getElementById('tipeKamar').value;
+    const checkin = new Date(document.getElementById('checkin').value);
+    const checkout = new Date(document.getElementById('checkout').value);
+
+    const satuHari = 24 * 60 * 60 * 1000;
+    const jumlahMalam = Math.round((checkout - checkin) / satuHari);
+
+    if (jumlahMalam <= 0) {
+      alert('Tanggal check-out harus lebih dari check-in!');
+      return;
+    }
+
+    const hargaPerMalam = hargaKamar[tipeKamar];
+    const totalHarga = hargaPerMalam * jumlahMalam;
+
+    const booking = {
+      nama,
+      tipeKamar,
+      checkin: checkin.toISOString().split('T')[0],
+      checkout: checkout.toISOString().split('T')[0],
+      jumlahMalam,
+      totalHarga,
+      statusPembayaran: false
+    };
+
+    // Simpan sementara sebelum pembayaran
+    localStorage.setItem('bookingSementara', JSON.stringify(booking));
+
+    // Redirect ke halaman pembayaran
+    window.location.href = 'pembayaran.html';
+  });
+</script>
+
+</body>
+</html>

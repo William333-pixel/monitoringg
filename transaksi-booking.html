@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaksi / Booking</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e293b;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f1f5f9;
+    }
+
+    .status {
+      font-weight: bold;
+      color: #16a34a;
+    }
+
+    .status.menunggu {
+      color: #e11d48;
+    }
+
+    .summary {
+      margin-top: 20px;
+      font-size: 16px;
+      text-align: center;
+      color: #475569;
+    }
+
+    .empty {
+      text-align: center;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Transaksi / Booking</h2>
+
+  <div id="transactionTableContainer"></div>
+
+  <script>
+    const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+    
+    // Filter booking yang statusPembayaran nya true atau false
+    const transaksi = bookings.map(b => ({
+      ...b,
+      status: b.statusPembayaran ? 'Lunas' : 'Menunggu Pembayaran',
+      statusClass: b.statusPembayaran ? 'status' : 'status menunggu'
+    }));
+
+    const tableContainer = document.getElementById('transactionTableContainer');
+    
+    if (transaksi.length === 0) {
+      tableContainer.innerHTML = '<p class="empty">Tidak ada transaksi saat ini.</p>';
+    } else {
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Tipe Kamar</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Total</th>
+            <th>Status Pembayaran</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${transaksi.map(b => `
+            <tr>
+              <td>${b.nama}</td>
+              <td>${b.tipeKamar}</td>
+              <td>${b.checkin}</td>
+              <td>${b.checkout}</td>
+              <td>Rp ${b.totalHarga.toLocaleString()}</td>
+              <td><span class="${b.statusClass}">${b.status}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+      tableContainer.appendChild(table);
+    }
+
+  </script>
+
+</body>
+</html>

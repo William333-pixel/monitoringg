@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout Customer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 20px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #16a34a;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    .btn {
+      background: #dc2626;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      background: #b91c1c;
+    }
+
+    .empty {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Checkout Customer yang Sudah Membayar</h2>
+  <div id="checkoutContainer"></div>
+
+  <script>
+    const container = document.getElementById('checkoutContainer');
+    const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+
+    const sudahBayar = bookings.filter(b => b.statusPembayaran === true);
+
+    if (sudahBayar.length === 0) {
+      container.innerHTML = '<p class="empty">Belum ada customer yang sudah membayar.</p>';
+    } else {
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Tipe Kamar</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Total</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sudahBayar.map((b, i) => `
+            <tr>
+              <td>${b.nama}</td>
+              <td>${b.tipeKamar}</td>
+              <td>${b.checkin}</td>
+              <td>${b.checkout}</td>
+              <td>Rp ${b.totalHarga.toLocaleString()}</td>
+              <td><button class="btn" onclick="checkoutCustomer(${i})">Checkout</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+      container.appendChild(table);
+    }
+
+    function checkoutCustomer(index) {
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      const sudahBayar = bookings.filter(b => b.statusPembayaran === true);
+      const data = sudahBayar[index];
+
+      const updatedBookings = bookings.filter(b =>
+        !(b.nama === data.nama &&
+          b.checkin === data.checkin &&
+          b.checkout === data.checkout &&
+          b.statusPembayaran === true)
+      );
+
+      localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+      alert(`Customer atas nama ${data.nama} telah checkout.`);
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>
